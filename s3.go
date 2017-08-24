@@ -63,6 +63,9 @@ func (c S3Client) Read(path string, w *CacheWriter) *StorageProviderError {
 		SecretKey: c.secretKey,
 	})
 	client := http.DefaultClient
+	client.Transport = &http.Transport{
+		Proxy: http.ProxyFromEnvironment,
+	}
 	res, err := client.Do(req)
 	if err != nil {
 		return &StorageProviderError{http.StatusServiceUnavailable, err}
